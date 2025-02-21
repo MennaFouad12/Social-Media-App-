@@ -39,7 +39,7 @@ const bootstarp = async (app, express) => {
 
   app.use(express.json()); // pasing body
 
-  app.get("/", (req, res) => res.json("Hello World!"));
+  app.get("/", (req, res) => res.send("Hello World!"));
   app.use("/auth", authRouter);
   app.use("/user", userRouter);
   app.use("/post", postRouter);
