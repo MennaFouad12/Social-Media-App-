@@ -8,28 +8,7 @@ import { updateEmail } from "../../Modules/User/user.service.js";
 import * as dbService from "../../DB/dbService.js";
 export const emailEmitter = new EventEmitter();
 
-emailEmitter.on("sendEmail", async (email, userName,id) => {
-  await sentCode({
-    data:{email,userName,id},
-    subjectType:subject.register
-    
-  })
-});
 
-
-emailEmitter.on("forgotPassword", async (email, userName,id) => {
-  await sentCode({
-    data:{email,userName,id},
-    subjectType:subject.resetPassword
-
-  })
-});
-emailEmitter.on("updateEmail", async (email, userName,id) => {
-  await sentCode({
-    data:{email,userName,id},
-    subjectType:subject.updateEmail
-  })
-});
 export const sentCode=async({
   data={},
   subjectType=subject.register,
@@ -61,4 +40,28 @@ export const sentCode=async({
   });
 
 }
+
+emailEmitter.on("sendEmail", async (email, userName,id) => {
+  await sentCode({
+    data:{email,userName,id},
+    subjectType:subject.register
+    
+  })
+});
+
+
+emailEmitter.on("forgotPassword", async (email, userName,id) => {
+  await sentCode({
+    data:{email,userName,id},
+    subjectType:subject.resetPassword
+
+  })
+});
+emailEmitter.on("updateEmail", async (email, userName,id) => {
+  await sentCode({
+    data:{email,userName,id},
+    subjectType:subject.updateEmail
+  })
+});
+
 

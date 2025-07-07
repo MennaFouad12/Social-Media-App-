@@ -39,11 +39,7 @@ router.post("/createPost",
 
 
         
-      router.get("/:postId", 
-        authentication(),
-        authorization(["User","Admin"]),
-        // validation(postValidation.getSinglePostSchema), 
-        asyncHandler(postService.getSinglePost));
+      
 
         router.get("/activePosts", 
           authentication(),
@@ -51,11 +47,18 @@ router.post("/createPost",
           // validation(postValidation.getSinglePostSchema), 
           asyncHandler(postService.activePosts));
 
+          router.get("/:postId", 
+            authentication(),
+            authorization(["User","Admin"]),
+            // validation(postValidation.getSinglePostSchema), 
+            asyncHandler(postService.getSinglePost));
+
         router.get("/freezedPosts", 
           authentication(),
           authorization(["User","Admin"]),
           // validation(postValidation.getSinglePostSchema), 
           asyncHandler(postService.freezePosts));
+          
         router.patch("/like_unlike/:postId", 
           authentication(),
           authorization(["User"]),

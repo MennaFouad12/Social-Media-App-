@@ -17,7 +17,7 @@ export const register = async (req, res, next) => {
   const hashPassword = hash({ plainText: password });
 const user=await dbService.create({model:UserModel,data:{userName,email,password:hashPassword}});
   
-  emailEmitter.emit("sendEmail", email, userName);
+  emailEmitter.emit("sendEmail", email, userName, user._id);
 
   return res.status(201).json({
     success: true,

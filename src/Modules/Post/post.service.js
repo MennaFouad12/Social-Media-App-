@@ -203,35 +203,77 @@ export const activePosts = async (req, res, next) => {
 
 
   //query stream method احسن في ال perfomance
-  const cursor = PostModel.find({ isDeleted: false }).cursor();
-  let resluts = [];
-  for (
-    let post = await cursor.next();
-    post != null;
-    post = await cursor.next()
-  ) {
-    if (!mongoose.Types.ObjectId.isValid(post._id)) {
-      console.error("Invalid ObjectId for post:", post._id);
-      continue; // Skip invalid post IDs
-    }
-    const comments = await dbService.find({
-      model: CommentModel,
-      filter: { postId: post._id, isDeleted: false },
-      select: "text image -_id"
-    });
+  // const cursor = PostModel.find({ isDeleted: false }).cursor();
+  // let resluts = [];
+  // for (
+  //   let post = await cursor.next();
+  //   post != null;
+  //   post = await cursor.next()
+  // ) {
+  //   if (!mongoose.Types.ObjectId.isValid(post._id)) {
+  //     console.error("Invalid ObjectId for post:", post._id);
+  //     continue; // Skip invalid post IDs
+  //   }
+  //   const comments = await dbService.find({
+  //     model: CommentModel,
+  //     filter: { postId: post._id, isDeleted: false },
+  //     select: "text image -_id"
+  //   });
 
-    resluts.push({ post, comments });
-  }
-
-
+  //   resluts.push({ post, comments });
+  // }
 
 
-  return res.status(200).json({ success: true, data: { resluts } });
+//pagination
+
+  let { page } = req.query;
+  
+// Pagination
+// limit fixed
+
+
+//// page 1 ==== 5 * (1-1) = 0
+//// page 2 === 5 * (2-1) = 5
+
+// limit , skip
+// limit 10 item per page
+const results = await PostModel.find({ isDeleted: false }).paginate(page);
+
+/*
+20 items
+limit 5 items per page
+page 1 >>>> limit 5 skip 0
+page 2 >>>> limit 5 skip 5
+page 3 >>>> limit 5 skip 10
+*/
+
+
+
+  return res.status(200).json({ success: true, data: { results } });
 
 
 
 
 }
+
+// export const activePosts = async (req, res, next) => {
+//   try {
+//     let { page } = req.query;
+//     page = parseInt(page) || 1; // Ensure page is a number
+
+//     const limit = 5;
+//     const skip = limit * (page - 1);
+
+//     // Ensure correct filtering
+//     const results = await PostModel.find({ isDeleted: false }).limit(limit).skip(skip);
+
+//     return res.status(200).json({ success: true, data: { results } });
+//   } catch (error) {
+//     console.error("Error in activePosts:", error);
+//     return res.status(500).json({ success: false, message: "Internal Server Error" });
+//   }
+// };
+
 
 export const freezePosts = async (req, res, next) => {
   let posts;

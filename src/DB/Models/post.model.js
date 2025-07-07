@@ -43,6 +43,22 @@ customId:{
   },
   { timestamps: true,toJSON: { virtuals: true } ,toObject: { virtuals: true } }
 );
+postSchema.query.paginate=async function (page) {
+  page=page ?page:1
+  const limit = 5;
+const skip = limit * (page - 1);
+const data=await this.skip(skip).limit(limit);
+//cuurent page,total items ,total pages,item per page
+const items = await this.model.countDocuments();
+const totalPages = Math.ceil(items / limit);
+return { data,
+   totalItems:items,
+    currentPage:Number(page),
+    totalPages,
+    itemPerPage:data.length,
+    nextPage: page < totalPages ? page + 1 : null, 
+    prevPage: page > 1 ? page - 1 : null} ;
+}
 postSchema.virtual("comments", {
   ref: "Comment",
   localField: "_id",

@@ -15,6 +15,7 @@ export const providersType = {
 export const defaultImage="upload\default-avatar-icon-of-social-media-user-vector.jpg"
 const userSchema = new Schema(
   {
+    
     userName: {
       type: String,
       required: true,
